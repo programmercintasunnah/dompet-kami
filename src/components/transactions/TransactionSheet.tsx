@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
-import { CalendarDays, Delete, Pencil } from "lucide-react";
+import { CalendarDays, Delete, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -209,6 +209,25 @@ export function TransactionSheet({
             })}
           </div>
 
+          {/* Tanggal */}
+          <div className="mt-4">
+            <Label htmlFor="transaction-date">Tanggal</Label>
+            <div className="relative mt-2">
+              <Input
+                id="transaction-date"
+                type="date"
+                {...form.register("transactionDate")}
+                className="pr-10"
+              />
+              <CalendarDays className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            </div>
+            {form.formState.errors.transactionDate && (
+              <p className="mt-1 text-sm text-destructive">
+                {form.formState.errors.transactionDate.message}
+              </p>
+            )}
+          </div>
+
           {/* Nominal */}
           <div className="mt-4">
             <Label htmlFor="amount-display">Nominal</Label>
@@ -307,25 +326,6 @@ export function TransactionSheet({
             )}
           </div>
 
-          {/* Tanggal */}
-          <div className="mt-4">
-            <Label htmlFor="transaction-date">Tanggal</Label>
-            <div className="relative mt-2">
-              <Input
-                id="transaction-date"
-                type="date"
-                {...form.register("transactionDate")}
-                className="pr-10"
-              />
-              <CalendarDays className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            </div>
-            {form.formState.errors.transactionDate && (
-              <p className="mt-1 text-sm text-destructive">
-                {form.formState.errors.transactionDate.message}
-              </p>
-            )}
-          </div>
-
           {/* Catatan */}
           <div className="mt-4">
             <Label htmlFor="note">Catatan (opsional)</Label>
@@ -367,16 +367,7 @@ export function TransactionSheet({
           )}
 
           <DrawerFooter className="mt-4 border-t">
-            {isEdit && editing && !confirmDelete ? (
-              <Button
-                type="button"
-                variant="outline"
-                className="w-full text-destructive"
-                onClick={() => setConfirmDelete(true)}
-              >
-                <Pencil className="h-4 w-4" /> Hapus transaksi
-              </Button>
-            ) : isEdit && editing && confirmDelete ? (
+            {confirmDelete ? (
               <div className="flex flex-col gap-2">
                 <p className="text-center text-sm text-muted-foreground">
                   Yakin ingin menghapus transaksi ini? Tindakan ini tidak bisa
@@ -400,6 +391,7 @@ export function TransactionSheet({
               </div>
             ) : (
               <>
+                {/* Submit selalu tampil, termasuk mode edit, supaya perubahan bisa disimpan. */}
                 <Button
                   type="submit"
                   size="lg"
@@ -409,11 +401,25 @@ export function TransactionSheet({
                 >
                   {isEdit ? "Simpan Perubahan" : "Simpan Transaksi"}
                 </Button>
-                <DrawerClose asChild>
-                  <Button type="button" variant="ghost" className="w-full">
-                    Batal
-                  </Button>
-                </DrawerClose>
+                <div className="flex gap-2">
+                  <DrawerClose asChild>
+                    <Button type="button" variant="ghost" className="w-full">
+                      Batal
+                    </Button>
+                  </DrawerClose>
+
+                  {isEdit && editing && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      disabled={!online}
+                      className="w-full text-destructive"
+                      onClick={() => setConfirmDelete(true)}
+                    >
+                      <Trash2 className="h-4 w-4" /> Hapus
+                    </Button>
+                  )}
+                </div>
               </>
             )}
           </DrawerFooter>
