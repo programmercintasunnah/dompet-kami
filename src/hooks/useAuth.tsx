@@ -8,7 +8,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { supabase } from "@/lib/supabaseClient";
+import { isSupabaseConfigured, supabase } from "@/lib/supabaseClient";
 
 interface AuthContextValue {
   session: Session | null;
@@ -51,6 +51,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signInWithGoogle = useCallback(async () => {
+    // Tanpa env, client memakai fallback localhost:54321 sehingga permintaan
+    // authorize berakhir 404. Cegah sebelum memanggil Supabase.
+    if (!isSupabaseConfigured) {
+      throw new Error(
+        "Konfigurasi Supabase belum terpasang (VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY). Tambahkan environment variable di Vercel lalu lakukan deploy ulang.",
+      );
+    }
+
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {

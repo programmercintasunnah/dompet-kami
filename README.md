@@ -221,7 +221,15 @@ Hasil build ada di `dist/` (termasuk `sw.js` dan `manifest.webmanifest`).
 - Build command: `npm run build`
 - Output directory: `dist`
 - Tambahkan environment variable `VITE_SUPABASE_URL` dan
-  `VITE_SUPABASE_ANON_KEY`
+  `VITE_SUPABASE_ANON_KEY` (Settings → Environment Variables, scope
+  **Production + Preview**)
+- **Setiap kali mengubah/menambah environment variable, lakukan deploy
+  ulang.** Vite menyematkan `import.meta.env` saat proses build, jadi tanpa
+  redeploy bundel lama tetap dipakai (dan permintaan login jatuh ke
+  `localhost:54321`)
+- Cara memeriksa build sudah membaca env: buka berkas `assets/index-*.js`
+  yang dirujuk `index.html`, pastikan memuat `https://<REF>.supabase.co` dan
+  **tidak** memuat `localhost:54321`
 - Jangan lupa menambahkan domain Vercel ke **Redirect URLs** Supabase
 
 **Netlify**

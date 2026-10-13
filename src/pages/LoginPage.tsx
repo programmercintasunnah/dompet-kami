@@ -43,7 +43,12 @@ export function LoginPage() {
         </CardHeader>
 
         <CardContent className="flex flex-col gap-3">
-          <Button size="lg" loading={loading} onClick={() => void handleSignIn()}>
+          <Button
+            size="lg"
+            loading={loading}
+            disabled={!isSupabaseConfigured}
+            onClick={() => void handleSignIn()}
+          >
             <GoogleIcon />
             Masuk dengan Google
           </Button>
@@ -54,8 +59,10 @@ export function LoginPage() {
 
           {!isSupabaseConfigured && (
             <p className="rounded-lg bg-amber-50 px-3 py-2 text-center text-xs text-amber-800 dark:bg-amber-950 dark:text-amber-200">
-              Konfigurasi Supabase belum diisi. Salin <code>.env.example</code>{" "}
-              menjadi <code>.env</code> lalu isi nilai variabelnya.
+              Aplikasi belum terhubung ke Supabase: environment variable{" "}
+              <code>VITE_SUPABASE_URL</code> dan{" "}
+              <code>VITE_SUPABASE_ANON_KEY</code> belum terpasang saat proses
+              build.
             </p>
           )}
         </CardContent>
