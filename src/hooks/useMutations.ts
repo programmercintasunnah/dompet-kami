@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { toast } from "sonner";
 import type { AccessRequest, Profile, TransactionType } from "@/types";
 import { supabase } from "@/lib/supabaseClient";
@@ -160,7 +160,6 @@ interface AccessRequestRow extends AccessRequest {
 
 export function useAccessRequests(status?: "pending" | "approved" | "rejected") {
   const { isAdmin } = useIsAdmin();
-  const qc = useQueryClient();
 
   const query = useQuery({
     queryKey: [ACCESS_REQUESTS_KEY, status ?? "all"],
@@ -179,23 +178,7 @@ export function useAccessRequests(status?: "pending" | "approved" | "rejected") 
     enabled: isAdmin,
   });
 
-  useEffect(() => {
-    if (!isAdmin) return;
-    const channel = supabase
-      .channel("access-requests-changes")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "access_requests" },
-        () => {
-          void qc.invalidateQueries({ queryKey: [ACCESS_REQUESTS_KEY] });
-        },
-      )
-      .subscribe();
-    return () => {
-      void supabase.removeChannel(channel);
-    };
-  }, [isAdmin, qc]);
-
+  // Realtime untuk tabel access_requests ditangani oleh <RealtimeSync /> di root.
   return query;
 }
 

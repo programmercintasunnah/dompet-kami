@@ -1,5 +1,4 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import type { Category, TransactionType } from "@/types";
 import { supabase } from "@/lib/supabaseClient";
 import { useIsAdmin } from "./useProfile";
@@ -8,7 +7,6 @@ export const CATEGORIES_KEY = "categories";
 
 export function useCategories(type?: TransactionType) {
   const { isAdmin } = useIsAdmin();
-  const queryClient = useQueryClient();
 
   const query = useQuery({
     queryKey: [CATEGORIES_KEY, type ?? "all"],
@@ -26,22 +24,6 @@ export function useCategories(type?: TransactionType) {
     staleTime: 60 * 1000,
   });
 
-  useEffect(() => {
-    if (!isAdmin) return;
-    const channel = supabase
-      .channel("categories-changes")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "categories" },
-        () => {
-          void queryClient.invalidateQueries({ queryKey: [CATEGORIES_KEY] });
-        },
-      )
-      .subscribe();
-    return () => {
-      void supabase.removeChannel(channel);
-    };
-  }, [isAdmin, queryClient]);
-
+  // Realtime untuk tabel categories ditangani oleh <RealtimeSync /> di root.
   return query;
 }

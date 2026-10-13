@@ -19,7 +19,13 @@ export function AppLayout() {
       <button
         type="button"
         aria-label="Catat transaksi"
-        onClick={() => setSheetOpen(true)}
+        onClick={(event) => {
+          // vaul (drawer) menandai elemen lain dengan aria-hidden saat terbuka.
+          // Bila tombol ini masih fokus, Chrome memperingatkan:
+          // "Blocked aria-hidden on an element because its descendant retained focus".
+          event.currentTarget.blur();
+          setSheetOpen(true);
+        }}
         className="fixed bottom-[calc(1.5rem+env(safe-area-inset-bottom))] left-1/2 z-40 flex h-14 w-14 -translate-x-1/2 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-transform active:scale-95"
       >
         <Plus className="h-7 w-7" />

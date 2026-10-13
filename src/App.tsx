@@ -11,6 +11,7 @@ import { PendingAccessPage } from "@/pages/PendingAccessPage";
 import { ROUTES } from "@/lib/constants";
 import { AuthProvider, useAuth } from "@/hooks/useAuth";
 import { useAppUpdate } from "@/hooks/useAppUpdate";
+import { RealtimeSync } from "@/hooks/useRealtimeSync";
 
 // Halaman berat (grafik) dan admin dimuat malas agar shell aplikasi ringan.
 const ReportsPage = lazy(() =>
@@ -78,6 +79,7 @@ export default function App() {
 
   return (
     <AuthProvider>
+      <RealtimeSync />
       <OfflineBanner />
       <AppRoutes />
     </AuthProvider>

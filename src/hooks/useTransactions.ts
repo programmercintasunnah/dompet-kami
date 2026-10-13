@@ -1,5 +1,4 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import type {
   Transaction,
   TransactionType,
@@ -73,7 +72,6 @@ export interface TransactionFilters {
 
 export function useTransactions(filters: TransactionFilters = {}) {
   const { isAdmin, isLoading: isAdminLoading } = useIsAdmin();
-  const queryClient = useQueryClient();
   const { month, dateFrom, dateTo, type, categoryId, createdById, limit } =
     filters;
 
@@ -117,25 +115,6 @@ export function useTransactions(filters: TransactionFilters = {}) {
     enabled: isAdmin,
   });
 
-  // Realtime: transaksi yang dicatat anggota lain langsung muncul.
-  useEffect(() => {
-    if (!isAdmin) return;
-
-    const channel = supabase
-      .channel("transactions-changes")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "transactions" },
-        () => {
-          void queryClient.invalidateQueries({ queryKey: [TRANSACTIONS_KEY] });
-        },
-      )
-      .subscribe();
-
-    return () => {
-      void supabase.removeChannel(channel);
-    };
-  }, [isAdmin, queryClient]);
-
+  // Realtime untuk tabel transactions ditangani oleh <RealtimeSync /> di root.
   return { ...query, isAdmin, isAdminLoading };
 }
