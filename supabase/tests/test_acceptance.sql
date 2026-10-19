@@ -129,8 +129,19 @@ begin
   assert v_created_by = auth.uid(), 'created_by harus terisi otomatis dari auth.uid()';
 
   -- Client tidak boleh mengisi kolom audit secara paksa
-  assert (select created_at is not null and updated_at is not null
-          from public.transactions where id = v_tx), 'created_at/updated_at wajib terisi';
+  assert (select created_at is not null
+          from public.transactions where id = v_tx), 'created_at wajib terisi';
+
+  -- updated_at/updated_by hanya boleh terisi setelah benar-benar diubah
+  assert (select updated_at is null and updated_by is null
+          from public.transactions where id = v_tx),
+         'updated_at/updated_by harus kosong saat INSERT';
+
+  update public.transactions set amount = amount where id = v_tx;
+
+  assert (select updated_at is not null and updated_by = auth.uid()
+          from public.transactions where id = v_tx),
+         'updated_at/updated_by wajib terisi setelah UPDATE';
 
   -- Pencarian lintas bulan
   select count(*) into v_count from public.search_transactions('oli');

@@ -6,7 +6,7 @@ export type AccessRequestStatus = "pending" | "approved" | "rejected";
 export interface AuditColumns {
   created_at: string;
   created_by: string | null;
-  updated_at: string;
+  updated_at: string | null;
   updated_by: string | null;
   deleted_at: string | null;
   deleted_by: string | null;
@@ -60,7 +60,7 @@ export interface TransactionSearchRow {
   created_by: string | null;
   created_by_name: string | null;
   created_at: string;
-  updated_at: string;
+  updated_at: string | null;
   updated_by: string | null;
   updated_by_name: string | null;
 }

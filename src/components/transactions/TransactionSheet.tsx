@@ -351,10 +351,16 @@ export function TransactionSheet({
                 pada {format(parseIsoDate(editing.transaction_date), "d MMM yyyy")}
               </p>
               <p className="mt-0.5">
-                Terakhir diubah oleh{" "}
-                <span className="font-medium text-foreground">
-                  {editing.updated_by_name ?? editing.creator_name ?? "—"}
-                </span>
+                {editing.updated_by_name ? (
+                  <>
+                    Terakhir diubah oleh{" "}
+                    <span className="font-medium text-foreground">
+                      {editing.updated_by_name}
+                    </span>
+                  </>
+                ) : (
+                  "Belum pernah diubah."
+                )}
               </p>
             </div>
           )}

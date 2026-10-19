@@ -87,7 +87,7 @@ untuk pertanyaan "kapan terakhir kali saya ganti oli motor?".
 
 ## Menjalankan migrasi
 
-Buka **Supabase Dashboard → SQL Editor → New query**, lalu jalankan keempat
+Buka **Supabase Dashboard → SQL Editor → New query**, lalu jalankan kelima
 file berikut **secara berurutan** (semua ditulis idempoten, aman dijalankan
 ulang):
 
@@ -97,9 +97,14 @@ ulang):
 | 2 | `supabase/migrations/0002_functions_triggers.sql` | trigger audit, trigger profil/admin pertama, `is_admin()`, semua RPC |
 | 3 | `supabase/migrations/0003_rls.sql` | aktifkan RLS + kebijakan |
 | 4 | `supabase/migrations/0004_seed_categories.sql` | kategori default |
+| 5 | `supabase/migrations/0005_updated_at_only_on_edit.sql` | `updated_at`/`updated_by` hanya terisi saat data diubah (NULL saat dibuat) |
 
-Salin isi file ke SQL Editor lalu tekan **Run**. Ulangi langkah 1–4 bila ada
+Salin isi file ke SQL Editor lalu tekan **Run**. Ulangi langkah 1–5 bila ada
 perubahan skema.
+
+> Jika database sudah pernah memakai versi sebelumnya, cukup jalankan
+> `0005_updated_at_only_on_edit.sql`; migrasi itu juga membersihkan
+> `updated_at`/`updated_by` lama yang belum pernah diedit.
 
 > Alternatif: bila Anda memakai Supabase CLI lokal, tempatkan file yang sama di
 > `supabase/migrations/` lalu jalankan `supabase db push`.

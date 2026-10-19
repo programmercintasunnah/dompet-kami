@@ -32,7 +32,7 @@ setup_database() {
   echo "== stub supabase =="
   psql -q -f - < supabase/tests/stub_local_supabase.sql
 
-  echo "== migrasi 0001-0004 =="
+  echo "== migrasi =="
   for f in supabase/migrations/*.sql; do
     echo "   -> $f"
     psql -q -f - < "$f" 2>&1 | grep -v "NOTICE:" || true

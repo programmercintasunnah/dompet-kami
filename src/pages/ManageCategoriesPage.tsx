@@ -36,18 +36,26 @@ import { cn } from "@/lib/cn";
 import type { Category, TransactionType } from "@/types";
 
 const PALETTE = [
-  "#16a34a",
   "#dc2626",
   "#f97316",
-  "#eab308",
-  "#0ea5e9",
-  "#6366f1",
-  "#ec4899",
-  "#a855f7",
   "#f59e0b",
+  "#eab308",
+  "#84cc16",
+  "#16a34a",
+  "#10b981",
   "#14b8a6",
+  "#06b6d4",
+  "#0ea5e9",
+  "#3b82f6",
+  "#6366f1",
+  "#8b5cf6",
+  "#a855f7",
+  "#d946ef",
+  "#ec4899",
+  "#f43f5e",
+  "#78716c",
   "#64748b",
-  "#000000",
+  "#0f172a",
 ];
 
 const formSchema = z.object({
@@ -269,7 +277,7 @@ export function ManageCategoriesPage() {
 
               <div>
                 <Label>Warna</Label>
-                <div className="mt-2 grid grid-cols-6 gap-2">
+                <div className="mt-2 grid grid-cols-5 gap-2">
                   {PALETTE.map((c) => (
                     <button
                       key={c}
